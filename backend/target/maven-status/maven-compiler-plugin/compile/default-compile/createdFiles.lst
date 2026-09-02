@@ -1,0 +1,12 @@
+com\projectsaloon\backend\controller\AuthController.class
+com\projectsaloon\backend\exception\GlobalExceptionHandler.class
+com\projectsaloon\backend\dto\RegisterRequest.class
+com\projectsaloon\backend\controller\CustomerController.class
+com\projectsaloon\backend\BackendApplication.class
+com\projectsaloon\backend\dto\LoginRequest.class
+com\projectsaloon\backend\dto\ApiResponse.class
+com\projectsaloon\backend\config\OpenApiConfig.class
+com\projectsaloon\backend\model\Customer.class
+com\projectsaloon\backend\controller\AppointmentController.class
+com\projectsaloon\backend\dto\LoginResponse.class
+com\projectsaloon\backend\config\AuthFilter.class

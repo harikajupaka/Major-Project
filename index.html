@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Registration - Swathi</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Customer Registration System</h1>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="main-content">
+            <div class="form-section">
+                <div class="icon-header">
+                    <div class="user-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <div class="plus-icon">+</div>
+                    </div>
+                    <h2>Customer Registration</h2>
+                </div>
+
+                <form id="registrationForm">
+                    <div class="form-group">
+                        <label for="name">Name *</label>
+                        <input type="text" id="name" name="name" required placeholder="Enter full name">
+                        <span class="error-message" id="nameError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age *</label>
+                        <input type="number" id="age" name="age" required min="1" max="150" placeholder="Enter age">
+                        <span class="error-message" id="ageError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="male" required>
+                                <span>Male</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="female" required>
+                                <span>Female</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="other" required>
+                                <span>Other</span>
+                            </label>
+                        </div>
+                        <span class="error-message" id="genderError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter email address">
+                        <span class="error-message" id="emailError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="Enter phone number">
+                        <span class="error-message" id="phoneError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea id="address" name="address" rows="3" placeholder="Enter address (optional)"></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Register Customer</button>
+                        <button type="button" class="btn btn-secondary" id="resetBtn">Clear Form</button>
+                    </div>
+                </form>
+
+                <div id="successMessage" class="success-message" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <span>Customer registered successfully!</span>
+                </div>
+
+                <div id="errorMessage" class="error-message-banner" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span id="errorMessageText"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="customers-section">
+            <h3>Registered Customers</h3>
+            <div id="customersList" class="customers-list">
+                <!-- Customer cards will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Customer Profile</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editCustomerId">
+                
+                <div class="form-group">
+                    <label for="editName">Name *</label>
+                    <input type="text" id="editName" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editAge">Age *</label>
+                    <input type="number" id="editAge" name="age" required min="1" max="150">
+                </div>
+
+                <div class="form-group">
+                    <label>Gender *</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="editGender" value="male" required>
+                            <span>Male</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="editGender" value="female" required>
+                            <span>Female</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="editGender" value="other" required>
+                            <span>Other</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editEmail">Email *</label>
+                    <input type="email" id="editEmail" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editPhone">Phone Number *</label>
+                    <input type="tel" id="editPhone" name="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editAddress">Address</label>
+                    <textarea id="editAddress" name="address" rows="3"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                    <button type="button" class="btn btn-secondary" id="cancelEdit">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>

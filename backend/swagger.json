@@ -1,0 +1,244 @@
+﻿{
+    "openapi":  "3.0.1",
+    "info":  {
+                 "title":  "Project Saloon API",
+                 "description":  "API documentation for Project Saloon Backend endpoints",
+                 "version":  "1.0"
+             },
+    "servers":  [
+                    {
+                        "url":  "http://localhost:8080",
+                        "description":  "Generated server url"
+                    }
+                ],
+    "tags":  [
+                 {
+                     "name":  "Customer Management",
+                     "description":  "Endpoints for customer login and operations"
+                 },
+                 {
+                     "name":  "Appointment Management",
+                     "description":  "Endpoints for scheduling and managing appointments"
+                 }
+             ],
+    "paths":  {
+                  "/api/customers/verify":  {
+                                                "post":  {
+                                                             "tags":  [
+                                                                          "Customer Management"
+                                                                      ],
+                                                             "summary":  "Verify OTP",
+                                                             "description":  "Verifies the provided OTP for the customer.",
+                                                             "operationId":  "verifyOtp",
+                                                             "parameters":  [
+                                                                                {
+                                                                                    "name":  "mobile",
+                                                                                    "in":  "query",
+                                                                                    "required":  true,
+                                                                                    "schema":  {
+                                                                                                   "type":  "string"
+                                                                                               }
+                                                                                },
+                                                                                {
+                                                                                    "name":  "otp",
+                                                                                    "in":  "query",
+                                                                                    "required":  true,
+                                                                                    "schema":  {
+                                                                                                   "type":  "string"
+                                                                                               }
+                                                                                }
+                                                                            ],
+                                                             "responses":  {
+                                                                               "200":  {
+                                                                                           "description":  "OK",
+                                                                                           "content":  {
+                                                                                                           "*/*":  {
+                                                                                                                       "schema":  {
+                                                                                                                                      "type":  "string"
+                                                                                                                                  }
+                                                                                                                   }
+                                                                                                       }
+                                                                                       }
+                                                                           }
+                                                         }
+                                            },
+                  "/api/customers/register":  {
+                                                  "post":  {
+                                                               "tags":  [
+                                                                            "Customer Management"
+                                                                        ],
+                                                               "summary":  "Register Customer",
+                                                               "description":  "Registers a new customer with Name, Age, Gender, and links to their mobile number after OTP verification.",
+                                                               "operationId":  "registerCustomer",
+                                                               "parameters":  [
+                                                                                  {
+                                                                                      "name":  "mobile",
+                                                                                      "in":  "query",
+                                                                                      "required":  true,
+                                                                                      "schema":  {
+                                                                                                     "type":  "string"
+                                                                                                 }
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "name",
+                                                                                      "in":  "query",
+                                                                                      "required":  true,
+                                                                                      "schema":  {
+                                                                                                     "type":  "string"
+                                                                                                 }
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "age",
+                                                                                      "in":  "query",
+                                                                                      "required":  true,
+                                                                                      "schema":  {
+                                                                                                     "type":  "integer",
+                                                                                                     "format":  "int32"
+                                                                                                 }
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "gender",
+                                                                                      "in":  "query",
+                                                                                      "required":  true,
+                                                                                      "schema":  {
+                                                                                                     "type":  "string"
+                                                                                                 }
+                                                                                  }
+                                                                              ],
+                                                               "responses":  {
+                                                                                 "200":  {
+                                                                                             "description":  "OK",
+                                                                                             "content":  {
+                                                                                                             "*/*":  {
+                                                                                                                         "schema":  {
+                                                                                                                                        "type":  "string"
+                                                                                                                                    }
+                                                                                                                     }
+                                                                                                         }
+                                                                                         }
+                                                                             }
+                                                           }
+                                              },
+                  "/api/customers/login":  {
+                                               "post":  {
+                                                            "tags":  [
+                                                                         "Customer Management"
+                                                                     ],
+                                                            "summary":  "Login/Send OTP",
+                                                            "description":  "Initiates customer login and sends an OTP to their mobile.",
+                                                            "operationId":  "login",
+                                                            "parameters":  [
+                                                                               {
+                                                                                   "name":  "mobile",
+                                                                                   "in":  "query",
+                                                                                   "required":  true,
+                                                                                   "schema":  {
+                                                                                                  "type":  "string"
+                                                                                              }
+                                                                               }
+                                                                           ],
+                                                            "responses":  {
+                                                                              "200":  {
+                                                                                          "description":  "OK",
+                                                                                          "content":  {
+                                                                                                          "*/*":  {
+                                                                                                                      "schema":  {
+                                                                                                                                     "type":  "string"
+                                                                                                                                 }
+                                                                                                                  }
+                                                                                                      }
+                                                                                      }
+                                                                          }
+                                                        }
+                                           },
+                  "/api/appointments/":  {
+                                             "post":  {
+                                                          "tags":  [
+                                                                       "Appointment Management"
+                                                                   ],
+                                                          "summary":  "Create an appointment",
+                                                          "description":  "Schedules a new appointment with a stylist",
+                                                          "operationId":  "createAppointment",
+                                                          "responses":  {
+                                                                            "200":  {
+                                                                                        "description":  "OK",
+                                                                                        "content":  {
+                                                                                                        "*/*":  {
+                                                                                                                    "schema":  {
+                                                                                                                                   "type":  "string"
+                                                                                                                               }
+                                                                                                                }
+                                                                                                    }
+                                                                                    }
+                                                                        }
+                                                      }
+                                         },
+                  "/api/customers/{id}":  {
+                                              "get":  {
+                                                          "tags":  [
+                                                                       "Customer Management"
+                                                                   ],
+                                                          "summary":  "Get Customer Details",
+                                                          "description":  "Retrieves customer information by ID.",
+                                                          "operationId":  "getCustomer",
+                                                          "parameters":  [
+                                                                             {
+                                                                                 "name":  "id",
+                                                                                 "in":  "path",
+                                                                                 "required":  true,
+                                                                                 "schema":  {
+                                                                                                "type":  "string"
+                                                                                            }
+                                                                             }
+                                                                         ],
+                                                          "responses":  {
+                                                                            "200":  {
+                                                                                        "description":  "OK",
+                                                                                        "content":  {
+                                                                                                        "*/*":  {
+                                                                                                                    "schema":  {
+                                                                                                                                   "type":  "string"
+                                                                                                                               }
+                                                                                                                }
+                                                                                                    }
+                                                                                    }
+                                                                        }
+                                                      }
+                                          },
+                  "/api/appointments/{id}":  {
+                                                 "get":  {
+                                                             "tags":  [
+                                                                          "Appointment Management"
+                                                                      ],
+                                                             "summary":  "Get Appointment Details",
+                                                             "description":  "Retrieves an appointment by its ID",
+                                                             "operationId":  "getAppointment",
+                                                             "parameters":  [
+                                                                                {
+                                                                                    "name":  "id",
+                                                                                    "in":  "path",
+                                                                                    "required":  true,
+                                                                                    "schema":  {
+                                                                                                   "type":  "string"
+                                                                                               }
+                                                                                }
+                                                                            ],
+                                                             "responses":  {
+                                                                               "200":  {
+                                                                                           "description":  "OK",
+                                                                                           "content":  {
+                                                                                                           "*/*":  {
+                                                                                                                       "schema":  {
+                                                                                                                                      "type":  "string"
+                                                                                                                                  }
+                                                                                                                   }
+                                                                                                       }
+                                                                                       }
+                                                                           }
+                                                         }
+                                             }
+              },
+    "components":  {
+
+                   }
+}

@@ -9,6 +9,7 @@ const Stylists = () => {
   const appointmentId = queryParams.get('appointmentId');
   const category = queryParams.get('category') || 'Men';
   const [loading, setLoading] = useState(false);
+  const [sortBy, setSortBy] = useState('none');
 
   const stylistSets = {
     Women: [
@@ -28,7 +29,18 @@ const Stylists = () => {
     ]
   };
 
-  const stylists = stylistSets[category] || stylistSets.Men;
+  const baseStylists = stylistSets[category] || stylistSets.Men;
+  const stylists = [...baseStylists].sort((a, b) => {
+    if (sortBy === 'rating') {
+      return b.rating - a.rating;
+    }
+    if (sortBy === 'experience') {
+      const expA = parseInt(a.exp.split(' ')[0]);
+      const expB = parseInt(b.exp.split(' ')[0]);
+      return expB - expA;
+    }
+    return 0; // none / default order
+  });
 
   const selectStylist = async (stylistId) => {
     if (!appointmentId) {
@@ -73,10 +85,17 @@ const Stylists = () => {
         {category} Stylists {loading && <span style={{marginLeft: '10px', fontSize: '12px', color: 'gray'}}>(Loading...)</span>}
       </h2>
       
-      <div style={{ display: 'flex', gap: '10px', margin: '15px 0', overflowX: 'auto' }}>
-        <button style={{ padding: '5px 10px', borderRadius: '15px', border: '1px solid #ff6600', backgroundColor: 'white', color: '#ff6600' }}>Sort by</button>
-        <button style={{ padding: '5px 10px', borderRadius: '15px', border: '1px solid #ccc', backgroundColor: 'white' }}>city</button>
-        <button style={{ padding: '5px 10px', borderRadius: '15px', border: '1px solid #ccc', backgroundColor: 'white' }}>language</button>
+      <div style={{ display: 'flex', gap: '10px', margin: '15px 0', alignItems: 'center' }}>
+        <span style={{ fontSize: '12px', color: '#666' }}>Sort by:</span>
+        <select 
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          style={{ padding: '5px 10px', borderRadius: '8px', border: '1px solid #ff6600', backgroundColor: 'white', color: '#ff6600', fontSize: '12px', cursor: 'pointer', outline: 'none' }}
+        >
+          <option value="none">Recommended</option>
+          <option value="rating">Rating (High to Low)</option>
+          <option value="experience">Experience (High to Low)</option>
+        </select>
       </div>
       
       <div>

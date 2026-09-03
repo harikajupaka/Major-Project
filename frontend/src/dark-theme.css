@@ -1,0 +1,33 @@
+/* DARK THEME MAGIC */
+body.dark-theme {
+  --bg-body: #1a1b1a;
+  --bg-body-gradient: radial-gradient(circle at 10% 0%, #2a2c28 0, transparent 35%), #1a1b1a;
+  --bg-shell: #222421;
+  --text-main: #e8e9e4;
+  --header-border: #333630;
+  --header-bg: rgba(34, 36, 33, 0.94);
+  --brand-circle: #bd654d;
+  --brand-circle-text: #fff9f1;
+  --brand-text: #e8e9e4;
+  --brand-small: #bba291;
+  --nav-text: #b0b3a8;
+  --nav-hover: #e08b73;
+  --btn-bg: #bd654d;
+  --btn-text: #fff;
+  --footer-text: #888b82;
+  --footer-border: #333630;
+  
+  --auth-bg-gradient: radial-gradient(circle at 82% 18%, #3a3227 0, transparent 28%);
+  --auth-panel-bg: #2a2c28;
+  --auth-title: #e8e9e4;
+  --auth-subtitle: #b0b3a8;
+  --input-border: #444740;
+  --input-bg: #1f211e;
+  --input-text: #e8e9e4;
+  --input-focus: #e08b73;
+  --promo-bg: #3a3227;
+  --category-bg: #2a2c28;
+  --card-title: #e8e9e4;
+  --card-subtitle: #b0b3a8;
+  --card-meta: #9a8170;
+}

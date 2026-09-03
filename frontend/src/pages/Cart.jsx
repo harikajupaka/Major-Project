@@ -9,9 +9,26 @@ const Cart = () => {
   // Extract state passed from StylistProfile
   const { selectedServices = [], stylist = null, appointmentId = null } = location.state || {};
 
-  const [date, setDate] = useState('10/May/ 2024');
-  const [time, setTime] = useState('9:30 AM');
+  const [date, setDate] = useState('2024-05-10');
+  const [time, setTime] = useState('09:30');
   const [loading, setLoading] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState('');
+  const [chatMessages, setChatMessages] = useState([
+    { sender: 'bot', text: 'Hi there! I am the Kiranmai Studio bot. How can I help you with your booking today?' }
+  ]);
+
+  const handleSendMessage = () => {
+    if (!chatInput.trim()) return;
+    const newMsg = { sender: 'user', text: chatInput };
+    setChatMessages([...chatMessages, newMsg]);
+    setChatInput('');
+    
+    // Simulate bot reply
+    setTimeout(() => {
+      setChatMessages(prev => [...prev, { sender: 'bot', text: "Thanks for reaching out! This is a demo bot, so I can't actually do anything yet, but your message was received." }]);
+    }, 1000);
+  };
 
   // Fallbacks if user reloads the page without state
   const displayStylist = stylist || { name: 'putin', img: 'putin_profile.jpg' };
@@ -37,7 +54,8 @@ const Cart = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/appointments/${appointmentId}/confirm?dateAndTime=${date} ${time}`, {
+      const servicesJson = encodeURIComponent(JSON.stringify(displayServices));
+      const response = await fetch(`/api/appointments/${appointmentId}/confirm?dateAndTime=${date} ${time}&servicesJson=${servicesJson}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -46,7 +64,7 @@ const Cart = () => {
       
       if (response.ok) {
         alert('Request sent successfully!');
-        navigate('/feedback');
+        navigate('/feedback', { state: { fromCheckout: true } });
       } else {
         alert("Failed to confirm appointment");
       }
@@ -74,7 +92,6 @@ const Cart = () => {
         <h4 style={{ fontSize: '14px', margin: '0 0 5px 0' }}>Service Address</h4>
         <p style={{ fontSize: '12px', color: '#666', margin: 0, display: 'flex', justifyContent: 'space-between' }}>
           <span>📍 RR nagar, Banglore</span>
-          <span style={{ color: '#ff6600', cursor: 'pointer' }}>Change address</span>
         </p>
       </div>
       
@@ -101,19 +118,19 @@ const Cart = () => {
           </tr>
         </tbody>
       </table>
-      <p style={{ textAlign: 'right', color: '#ff6600', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold' }}>Add more ...</p>
+      <p onClick={() => navigate('/stylist-profile?id=' + (displayStylist.id || '1'), { state: location.state })} style={{ textAlign: 'right', color: '#ff6600', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold' }}>Add more ...</p>
       
       <h4 style={{ fontSize: '14px', marginTop: '20px', marginBottom: '10px' }}>Booking details</h4>
       <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
         <div style={{ flex: 1 }}>
           <label style={{ fontSize: '10px', color: '#ff6600' }}>Appointment date</label>
-          <input type="text" value={date} onChange={e => setDate(e.target.value)} style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+          <input type="date" value={date} onChange={e => setDate(e.target.value)} style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
         </div>
       </div>
       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
         <div style={{ flex: 1 }}>
           <label style={{ fontSize: '10px', color: '#ff6600' }}>Appointment Time</label>
-          <input type="text" value={time} onChange={e => setTime(e.target.value)} style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+          <input type="time" value={time} onChange={e => setTime(e.target.value)} style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
         </div>
       </div>
       
@@ -137,8 +154,49 @@ const Cart = () => {
       
       <div style={{ display: 'flex', gap: '10px' }}>
         <button style={{ flex: 1, padding: '10px', backgroundColor: '#ff9933', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>📞 Call</button>
-        <button style={{ flex: 1, padding: '10px', backgroundColor: '#ff9933', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>💬 Chat</button>
+        <button 
+          onClick={() => setIsChatOpen(true)}
+          style={{ flex: 1, padding: '10px', backgroundColor: '#ff9933', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+        >
+          💬 Chat
+        </button>
       </div>
+
+      {isChatOpen && (
+        <div style={{
+          position: 'fixed', bottom: '20px', right: '20px', width: '300px', height: '400px',
+          backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 5px 20px rgba(0,0,0,0.2)',
+          display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 100
+        }}>
+          <div style={{ backgroundColor: '#ff6600', padding: '15px', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontWeight: 'bold' }}>🤖 Support Bot</span>
+            <button onClick={() => setIsChatOpen(false)} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', fontSize: '16px' }}>✕</button>
+          </div>
+          <div style={{ flex: 1, padding: '15px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', backgroundColor: '#f9f9f9' }}>
+            {chatMessages.map((msg, i) => (
+              <div key={i} style={{
+                alignSelf: msg.sender === 'bot' ? 'flex-start' : 'flex-end',
+                backgroundColor: msg.sender === 'bot' ? '#e0e0e0' : '#ff9933',
+                color: msg.sender === 'bot' ? '#333' : 'white',
+                padding: '8px 12px', borderRadius: '15px', maxWidth: '80%', fontSize: '13px'
+              }}>
+                {msg.text}
+              </div>
+            ))}
+          </div>
+          <div style={{ padding: '10px', borderTop: '1px solid #ddd', display: 'flex', gap: '10px' }}>
+            <input 
+              type="text" 
+              value={chatInput} 
+              onChange={e => setChatInput(e.target.value)}
+              onKeyPress={e => e.key === 'Enter' && handleSendMessage()}
+              placeholder="Type a message..." 
+              style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '20px', outline: 'none' }} 
+            />
+            <button onClick={handleSendMessage} style={{ background: '#ff6600', color: 'white', border: 'none', borderRadius: '50%', width: '35px', height: '35px', cursor: 'pointer' }}>➤</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

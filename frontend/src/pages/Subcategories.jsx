@@ -47,8 +47,8 @@ const Subcategories = () => {
       });
       
       if (response.ok) {
-        // Passing dummy-123 for now since backend currently returns a string msg instead of JSON id
-        navigate(`/stylists?category=${mainCategory}&subCategory=${subCategory}&appointmentId=dummy-123`);
+        const data = await response.json();
+        navigate(`/stylists?category=${mainCategory}&subCategory=${subCategory}&appointmentId=${data.id}`);
       } else {
         alert("Failed to initialize appointment");
       }

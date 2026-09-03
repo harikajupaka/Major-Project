@@ -11,7 +11,7 @@ const StylistProfile = () => {
   const category = queryParams.get('category') || 'Men';
 
   const [activeTab, setActiveTab] = useState('services'); // 'services' or 'profile'
-  const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedServices, setSelectedServices] = useState(location.state?.selectedServices || []);
 
   // Dummy data based on ID
   const getStylistDetails = () => {

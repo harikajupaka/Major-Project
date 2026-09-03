@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Feedback = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromCheckout = location.state?.fromCheckout || false;
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
 
@@ -51,12 +53,14 @@ const Feedback = () => {
           Submit Feedback
         </button>
         
-        <button 
-          onClick={() => navigate('/home')}
-          style={{ width: '100%', padding: '12px', backgroundColor: 'transparent', color: '#666', border: 'none', marginTop: '10px', fontSize: '12px', cursor: 'pointer' }}
-        >
-          Skip for now
-        </button>
+        {fromCheckout && (
+          <button 
+            onClick={() => navigate('/home')}
+            style={{ width: '100%', padding: '12px', backgroundColor: 'transparent', color: '#666', border: 'none', marginTop: '10px', fontSize: '12px', cursor: 'pointer' }}
+          >
+            Skip for now
+          </button>
+        )}
       </div>
     </div>
   );

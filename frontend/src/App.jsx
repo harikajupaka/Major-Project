@@ -16,8 +16,8 @@ function App() {
       <div className="app-shell">
         <header className="app-header">
           <a className="brand-mark" href="/home">
-            <span>KS</span>
-            <div><strong>Kiranmai</strong><small>STUDIO &amp; SALON</small></div>
+            <span>AU</span>
+            <div><strong>AURA</strong><small>STUDIO &amp; SALON</small></div>
           </a>
           <nav className="desktop-nav">
             <a href="/home">Explore</a>
@@ -38,7 +38,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/feedback" element={<Feedback />} />
         </Routes>
-        <footer className="app-footer">Kiranmai Studio <span>•</span> Personal care, thoughtfully curated</footer>
+        <footer className="app-footer">AURA Studio <span>•</span> Personal care, thoughtfully curated</footer>
       </div>
     </Router>
   );

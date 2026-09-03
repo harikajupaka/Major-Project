@@ -10,7 +10,7 @@ const twilio = require('twilio');
 const app = express();
 const port = Number(process.env.PORT || 8081);
 const jwtSecret = process.env.JWT_SECRET || 'your_super_secret_jwt_key_saloon_which_must_be_long_enough';
-const otpExposeCode = process.env.OTP_EXPOSE_CODE !== 'false';
+const otpExposeCode = process.env.OTP_EXPOSE_CODE === 'true';
 const users = new Map();
 const otpStore = new Map();
 const staticDirectory = path.join(__dirname, 'src', 'main', 'resources', 'static');

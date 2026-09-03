@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 const path = require('path');
-const crypto = require('crypto');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -10,9 +9,7 @@ const twilio = require('twilio');
 const app = express();
 const port = Number(process.env.PORT || 8081);
 const jwtSecret = process.env.JWT_SECRET || 'your_super_secret_jwt_key_saloon_which_must_be_long_enough';
-const otpExposeCode = process.env.OTP_EXPOSE_CODE === 'true';
 const users = new Map();
-const otpStore = new Map();
 const staticDirectory = path.join(__dirname, 'src', 'main', 'resources', 'static');
 
 app.use(express.json());
@@ -103,15 +100,13 @@ app.post('/api/auth/otp/send', async (req, res) => {
   if (!users.has(mobileNumber)) {
     return res.status(404).json(apiResponse(false, 'No account exists with this mobile number.'));
   }
+  if (!twilioConfigured()) {
+    return res.status(503).json(apiResponse(false, 'Twilio is not configured. Set the Twilio environment variables and restart the server.'));
+  }
   try {
-    if (twilioConfigured()) {
-      await twilioClient().verify.v2.services(process.env.TWILIO_VERIFY_SERVICE_SID)
-        .verifications.create({ to: mobileNumber, channel: 'sms' });
-      return res.json(apiResponse(true, 'OTP sent successfully.'));
-    }
-    const code = crypto.randomInt(0, 1000000).toString().padStart(6, '0');
-    otpStore.set(mobileNumber, { code, expiresAt: Date.now() + 300000 });
-    return res.json(apiResponse(true, 'OTP sent successfully', otpExposeCode ? { debugCode: code } : {}));
+    await twilioClient().verify.v2.services(process.env.TWILIO_VERIFY_SERVICE_SID)
+      .verifications.create({ to: mobileNumber, channel: 'sms' });
+    return res.json(apiResponse(true, 'OTP sent successfully.'));
   } catch {
     return res.status(502).json(apiResponse(false, 'The OTP provider could not send a code.'));
   }
@@ -122,20 +117,15 @@ app.post('/api/auth/otp/verify', async (req, res) => {
     return res.status(400).json(apiResponse(false, 'Validation failed: mobile number and a 6-digit OTP are required.'));
   }
   const mobileNumber = normalizeMobileNumber(req.body.mobileNumber);
+  if (!twilioConfigured()) {
+    return res.status(503).json(apiResponse(false, 'Twilio is not configured. Set the Twilio environment variables and restart the server.'));
+  }
   try {
-    if (twilioConfigured()) {
-      const check = await twilioClient().verify.v2.services(process.env.TWILIO_VERIFY_SERVICE_SID)
-        .verificationChecks.create({ to: mobileNumber, code: req.body.otp });
-      return check.status === 'approved'
-        ? res.json(apiResponse(true, 'OTP verified successfully.'))
-        : res.status(401).json(apiResponse(false, 'Invalid or expired OTP.'));
-    }
-    const entry = otpStore.get(mobileNumber);
-    if (!entry || entry.expiresAt < Date.now() || entry.code !== req.body.otp) {
-      return res.status(401).json(apiResponse(false, 'Invalid or expired OTP.'));
-    }
-    otpStore.delete(mobileNumber);
-    return res.json(apiResponse(true, 'OTP verified successfully.'));
+    const check = await twilioClient().verify.v2.services(process.env.TWILIO_VERIFY_SERVICE_SID)
+      .verificationChecks.create({ to: mobileNumber, code: req.body.otp });
+    return check.status === 'approved'
+      ? res.json(apiResponse(true, 'OTP verified successfully.'))
+      : res.status(401).json(apiResponse(false, 'Invalid or expired OTP.'));
   } catch {
     return res.status(502).json(apiResponse(false, 'The OTP provider could not verify the code.'));
   }

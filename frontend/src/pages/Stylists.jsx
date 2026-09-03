@@ -7,13 +7,28 @@ const Stylists = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const appointmentId = queryParams.get('appointmentId');
+  const category = queryParams.get('category') || 'Men';
   const [loading, setLoading] = useState(false);
 
-  const stylists = [
-    { id: 'S1', name: 'rahul', img: 'rahul.jpg', specialty: 'Hair cut, Herbal facial', exp: '4 years', rating: 4.0 },
-    { id: 'S2', name: 'putin', img: 'putin.jpg', specialty: 'French beard trim, Hair coloring', exp: '3 years', rating: 4.5 },
-    { id: 'S3', name: 'henna', img: 'henna.jpg', specialty: 'Head massage, Sandwich massage', exp: '6 years', rating: 4.2 }
-  ];
+  const stylistSets = {
+    Women: [
+      { id: 'S1', name: 'Ananya', img: 'women_stylist_1.jpg', specialty: 'Bridal makeup, Hair styling', exp: '7 years', rating: 4.9 },
+      { id: 'S2', name: 'Meera', img: 'women_stylist_2.jpg', specialty: 'Hair coloring, Skin care', exp: '6 years', rating: 4.8 },
+      { id: 'S3', name: 'Riya', img: 'women_stylist_3.jpg', specialty: 'Facials, Nail care', exp: '5 years', rating: 4.7 }
+    ],
+    Children: [
+      { id: 'S1', name: 'Aarav', img: 'children_stylist_1.jpg', specialty: 'Gentle haircuts, Kids styling', exp: '5 years', rating: 4.8 },
+      { id: 'S2', name: 'Sia', img: 'children_stylist_2.jpg', specialty: 'Kids hair care, Fun styling', exp: '4 years', rating: 4.7 },
+      { id: 'S3', name: 'Kabir', img: 'children_stylist_3.jpg', specialty: 'Comfort cuts, Hair wash', exp: '6 years', rating: 4.9 }
+    ],
+    Men: [
+      { id: 'S1', name: 'Rahul', img: 'stylist_1.jpg', specialty: 'Hair cut, Herbal facial', exp: '4 years', rating: 4.0 },
+      { id: 'S2', name: 'Putin', img: 'stylist_3.jpg', specialty: 'French beard trim, Hair coloring', exp: '3 years', rating: 4.5 },
+      { id: 'S3', name: 'Henna', img: 'stylist_2.jpg', specialty: 'Head massage, Hair spa', exp: '6 years', rating: 4.2 }
+    ]
+  };
+
+  const stylists = stylistSets[category] || stylistSets.Men;
 
   const selectStylist = async (stylistId) => {
     if (!appointmentId) {
@@ -30,7 +45,7 @@ const Stylists = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8080/api/appointments/${appointmentId}/stylist?stylistId=${stylistId}`, {
+      const response = await fetch(`/api/appointments/${appointmentId}/stylist?stylistId=${stylistId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -39,7 +54,7 @@ const Stylists = () => {
       
       if (response.ok) {
         const profileId = stylistId.replace('S', '');
-        navigate(`/stylist-profile?id=${profileId}&appointmentId=${appointmentId}`);
+        navigate(`/stylist-profile?id=${profileId}&appointmentId=${appointmentId}&category=${category}`);
       } else {
         alert("Failed to select stylist");
       }
@@ -55,7 +70,7 @@ const Stylists = () => {
     <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
       <h2 style={{ fontSize: '18px', display: 'flex', alignItems: 'center' }}>
         <span style={{ cursor: 'pointer', marginRight: '10px' }} onClick={() => navigate(-1)}>←</span>
-        Stylist's Edge {loading && <span style={{marginLeft: '10px', fontSize: '12px', color: 'gray'}}>(Loading...)</span>}
+        {category} Stylists {loading && <span style={{marginLeft: '10px', fontSize: '12px', color: 'gray'}}>(Loading...)</span>}
       </h2>
       
       <div style={{ display: 'flex', gap: '10px', margin: '15px 0', overflowX: 'auto' }}>

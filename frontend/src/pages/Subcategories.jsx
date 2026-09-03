@@ -39,7 +39,7 @@ const Subcategories = () => {
     setLoading(true);
     try {
       // Create initial appointment doc as per flow requirements
-      const response = await fetch(`http://localhost:8080/api/appointments/category?customerId=${user.mobileNumber}&mainCategory=${mainCategory}&subCategory=${subCategory}`, {
+      const response = await fetch(`/api/appointments/category?customerId=${user.mobileNumber}&mainCategory=${mainCategory}&subCategory=${subCategory}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -86,7 +86,7 @@ const Subcategories = () => {
             }}
           >
             <PlaceholderImage 
-              name={`${sub.toLowerCase()}_icon.jpg`} 
+              name={`${mainCategory.toLowerCase()}_${sub.toLowerCase()}_icon.jpg`}
               width="50px" 
               height="50px" 
               style={{ borderRadius: '8px', marginRight: '15px' }} 

@@ -7,12 +7,21 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class AuthFilter implements Filter {
+
+    @Value("${jwt.secret:your_super_secret_jwt_key_saloon_which_must_be_long_enough}")
+    private String jwtSecret;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -49,7 +58,6 @@ public class AuthFilter implements Filter {
             return;
         }
         
-        // Extract the token (In a real app, validate the JWT signature here)
         String token = authHeader.substring(7);
         if (token.isEmpty()) {
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -58,7 +66,18 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        // If validation passes, proceed
-        chain.doFilter(request, response);
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            req.setAttribute("authenticatedMobileNumber", claims.getSubject());
+            chain.doFilter(request, response);
+        } catch (JwtException | IllegalArgumentException exception) {
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            res.setContentType("application/json");
+            res.getWriter().write("{\"error\": \"Unauthorized. Token is invalid or expired.\"}");
+        }
     }
 }

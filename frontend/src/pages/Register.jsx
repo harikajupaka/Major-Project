@@ -28,7 +28,7 @@ function Register() {
         age: parseInt(formData.age, 10)
       };
 
-      const response = await fetch('http://localhost:8080/api/auth/register', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -40,7 +40,7 @@ function Register() {
       } else {
         setError(data.message || 'Registration failed.');
       }
-    } catch (err) {
+    } catch {
       setError('Network error. Please try again later.');
     } finally {
       setLoading(false);
@@ -48,47 +48,44 @@ function Register() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-pink-50 p-6">
-      <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center text-pink-600 mb-6">Create Account</h2>
+    <main className="auth-page">
+      <div className="auth-panel auth-panel-wide">
+        <div className="auth-kicker">Kiranmai Studio</div>
+        <h1 className="auth-title">Create your account</h1>
+        <p className="auth-subtitle">A calmer, more personal way to book your care.</p>
         
-        {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">{error}</div>}
+        {error && <div className="auth-error">{error}</div>}
 
-        <form onSubmit={handleRegister} className="space-y-4">
+        <form onSubmit={handleRegister} className="auth-form">
           <div>
-            <label className="block text-gray-700 font-semibold mb-1">Full Name</label>
+            <label>Full name</label>
             <input 
               type="text" name="name" value={formData.name} onChange={handleChange} required
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-semibold mb-1">Mobile Number</label>
+            <label>Mobile number</label>
             <input 
               type="text" name="mobileNumber" placeholder="+919876543210" value={formData.mobileNumber} onChange={handleChange} required
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-semibold mb-1">Password</label>
+            <label>Password</label>
             <input 
               type="password" name="password" value={formData.password} onChange={handleChange} required
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
             />
           </div>
           <div className="flex space-x-4">
             <div className="flex-1">
-              <label className="block text-gray-700 font-semibold mb-1">Age</label>
+              <label>Age</label>
               <input 
                 type="number" name="age" value={formData.age} onChange={handleChange} required
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
               />
             </div>
             <div className="flex-1">
-              <label className="block text-gray-700 font-semibold mb-1">Gender</label>
+              <label>Gender</label>
               <select 
                 name="gender" value={formData.gender} onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white"
               >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -96,19 +93,18 @@ function Register() {
               </select>
             </div>
           </div>
-          <button 
+          <button className="auth-submit"
             type="submit" disabled={loading}
-            className="w-full bg-pink-600 text-white font-bold py-3 rounded-lg hover:bg-pink-700 transition mt-4"
           >
             {loading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-gray-600">
-          Already have an account? <Link to="/" className="text-pink-600 font-bold hover:underline">Login</Link>
+        <p className="auth-switch">
+          Already have an account? <Link to="/">Sign in</Link>
         </p>
       </div>
-    </div>
+    </main>
   );
 }
 

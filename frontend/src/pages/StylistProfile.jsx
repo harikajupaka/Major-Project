@@ -8,6 +8,7 @@ const StylistProfile = () => {
   const queryParams = new URLSearchParams(location.search);
   const stylistId = queryParams.get('id') || '1';
   const appointmentId = queryParams.get('appointmentId') || 'dummy-123';
+  const category = queryParams.get('category') || 'Men';
 
   const [activeTab, setActiveTab] = useState('services'); // 'services' or 'profile'
   const [selectedServices, setSelectedServices] = useState([]);
@@ -19,7 +20,19 @@ const StylistProfile = () => {
       '2': { id: '2', name: 'Henna', img: 'stylist_2.jpg', location: 'Jayanagar, Bangalore', exp: '8 Years', bio: 'Specializes in bridal makeup, hair coloring, and keratin treatments.' },
       '3': { id: '3', name: 'Putin', img: 'stylist_3.jpg', location: 'Indiranagar, Bangalore', exp: '10 Years', bio: 'Master hair stylist with international experience in cutting-edge styles.' }
     };
-    return stylists[stylistId] || stylists['1'];
+    const categoryStylists = {
+      Women: {
+        '1': { id: '1', name: 'Ananya', img: 'women_stylist_1.jpg', location: 'Koramangala, Bangalore', exp: '7 Years', bio: 'Specialist in bridal makeup, hair styling, and occasion-ready beauty looks.' },
+        '2': { id: '2', name: 'Meera', img: 'women_stylist_2.jpg', location: 'Jayanagar, Bangalore', exp: '6 Years', bio: 'Known for beautiful hair color, skin care rituals, and relaxed salon experiences.' },
+        '3': { id: '3', name: 'Riya', img: 'women_stylist_3.jpg', location: 'Indiranagar, Bangalore', exp: '5 Years', bio: 'Creates polished facials, nail care, and everyday styling tailored to each guest.' }
+      },
+      Children: {
+        '1': { id: '1', name: 'Aarav', img: 'children_stylist_1.jpg', location: 'Whitefield, Bangalore', exp: '5 Years', bio: 'A patient kids stylist who makes haircuts comfortable, calm, and fun.' },
+        '2': { id: '2', name: 'Sia', img: 'children_stylist_2.jpg', location: 'HSR Layout, Bangalore', exp: '4 Years', bio: 'Specializes in gentle hair care and playful styles for young guests.' },
+        '3': { id: '3', name: 'Kabir', img: 'children_stylist_3.jpg', location: 'Indiranagar, Bangalore', exp: '6 Years', bio: 'Experienced in comfort-first cuts, washes, and easy-to-maintain kids styles.' }
+      }
+    };
+    return categoryStylists[category]?.[stylistId] || stylists[stylistId] || stylists['1'];
   };
 
   const stylist = getStylistDetails();

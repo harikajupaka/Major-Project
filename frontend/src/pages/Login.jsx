@@ -14,7 +14,7 @@ function Login() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mobileNumber, password })
@@ -22,13 +22,27 @@ function Login() {
 
       const data = await response.json();
       if (data.success) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify({ name: data.name, mobileNumber: data.mobileNumber }));
-        navigate('/home');
+        const otpResponse = await fetch('/api/auth/otp/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mobileNumber })
+        });
+        const otpData = await otpResponse.json();
+        if (!otpResponse.ok || !otpData.success) {
+          setError(otpData.message || 'Could not send OTP.');
+          return;
+        }
+        sessionStorage.setItem('pendingLogin', JSON.stringify({
+          token: data.token,
+          name: data.name,
+          mobileNumber: data.mobileNumber,
+          debugCode: otpData.debugCode
+        }));
+        navigate('/verify-otp');
       } else {
         setError(data.message || 'Login failed. Please check your credentials.');
       }
-    } catch (err) {
+    } catch {
       setError('Network error. Please try again later.');
     } finally {
       setLoading(false);
@@ -36,49 +50,51 @@ function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-pink-50 p-6">
-      <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center text-pink-600 mb-6">Welcome Back</h2>
+    <main className="auth-page">
+      <div className="auth-panel">
+        <div className="auth-kicker">Kiranmai Studio</div>
+        <h1 className="auth-title">Welcome back</h1>
+        <p className="auth-subtitle">Sign in to discover your next salon experience.</p>
         
-        {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">{error}</div>}
+        {error && <div className="auth-error">{error}</div>}
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">Mobile Number</label>
+        <form onSubmit={handleLogin} className="auth-form">
+          <label>
+            <span>Mobile number</span>
             <input 
               type="text" 
+              inputMode="tel"
+              autoComplete="tel"
+              maxLength={14}
               placeholder="+919876543210"
               value={mobileNumber}
               onChange={(e) => setMobileNumber(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
               required 
             />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">Password</label>
+          </label>
+          <label>
+            <span>Password</span>
             <input 
               type="password" 
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
               required 
             />
-          </div>
-          <button 
+          </label>
+          <button className="auth-submit"
             type="submit" 
             disabled={loading}
-            className="w-full bg-pink-600 text-white font-bold py-3 rounded-lg hover:bg-pink-700 transition"
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-gray-600">
-          Don't have an account? <Link to="/register" className="text-pink-600 font-bold hover:underline">Sign up</Link>
+        <p className="auth-switch">
+          New to Kiranmai? <Link to="/register">Create an account</Link>
         </p>
       </div>
-    </div>
+    </main>
   );
 }
 

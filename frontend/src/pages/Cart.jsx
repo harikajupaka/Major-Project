@@ -37,7 +37,7 @@ const Cart = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8080/api/appointments/${appointmentId}/confirm?dateAndTime=${date} ${time}`, {
+      const response = await fetch(`/api/appointments/${appointmentId}/confirm?dateAndTime=${date} ${time}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`

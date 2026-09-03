@@ -150,4 +150,7 @@ app.use((req, res, next) => {
   return res.sendFile(path.join(staticDirectory, 'index.html'));
 });
 
-app.listen(port, () => console.log(`Project Saloon JavaScript backend running on port ${port}`));
+app.listen(port, () => {
+  console.log(`Project Saloon JavaScript backend running on port ${port}`);
+  console.log(`Open the application at http://localhost:${port}/`);
+});

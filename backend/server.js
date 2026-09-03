@@ -107,7 +107,8 @@ app.post('/api/auth/otp/send', async (req, res) => {
     await twilioClient().verify.v2.services(process.env.TWILIO_VERIFY_SERVICE_SID)
       .verifications.create({ to: mobileNumber, channel: 'sms' });
     return res.json(apiResponse(true, 'OTP sent successfully.'));
-  } catch {
+  } catch (error) {
+    console.error('Twilio OTP send failed:', error.code || error.status || error.message);
     return res.status(502).json(apiResponse(false, 'The OTP provider could not send a code.'));
   }
 });
@@ -126,7 +127,8 @@ app.post('/api/auth/otp/verify', async (req, res) => {
     return check.status === 'approved'
       ? res.json(apiResponse(true, 'OTP verified successfully.'))
       : res.status(401).json(apiResponse(false, 'Invalid or expired OTP.'));
-  } catch {
+  } catch (error) {
+    console.error('Twilio OTP verification failed:', error.code || error.status || error.message);
     return res.status(502).json(apiResponse(false, 'The OTP provider could not verify the code.'));
   }
 });

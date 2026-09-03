@@ -1,5 +1,15 @@
 package com.projectsaloon.backend.config;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,15 +17,6 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 @Component
 public class AuthFilter implements Filter {
@@ -31,6 +32,11 @@ public class AuthFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
         
         String path = req.getRequestURI();
+
+        if (!path.startsWith("/api/")) {
+            chain.doFilter(request, response);
+            return;
+        }
         
         // Handle CORS Preflight Requests
         if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {

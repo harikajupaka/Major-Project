@@ -7,7 +7,7 @@
              },
     "servers":  [
                     {
-                        "url":  "http://localhost:8080",
+                        "url":  "https://major-project-backend-ufr8.onrender.com",
                         "description":  "Generated server url"
                     }
                 ],

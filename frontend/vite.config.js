@@ -10,7 +10,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': 'http://localhost:8081'
+      '/api': 'https://major-project-frontend-qenj.onrender.com'
     }
   }
 })

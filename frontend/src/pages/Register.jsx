@@ -50,7 +50,7 @@ function Register() {
   return (
     <main className="auth-page">
       <div className="auth-panel auth-panel-wide">
-        <div className="auth-kicker">Kiranmai Studio</div>
+        <div className="auth-kicker">AURA Studio</div>
         <h1 className="auth-title">Create your account</h1>
         <p className="auth-subtitle">A calmer, more personal way to book your care.</p>
         

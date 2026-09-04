@@ -52,7 +52,7 @@ function Login() {
   return (
     <main className="auth-page">
       <div className="auth-panel">
-        <div className="auth-kicker">Kiranmai Studio</div>
+        <div className="auth-kicker">AURA Studio</div>
         <h1 className="auth-title">Welcome back</h1>
         <p className="auth-subtitle">Sign in to discover your next salon experience.</p>
         
@@ -91,7 +91,7 @@ function Login() {
         </form>
 
         <p className="auth-switch">
-          New to Kiranmai? <Link to="/register">Create an account</Link>
+          New to AURA? <Link to="/register">Create an account</Link>
         </p>
       </div>
     </main>

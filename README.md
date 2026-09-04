@@ -1,21 +1,16 @@
-# Major-Project
+# React + Vite
 
-## Authentication setup
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-The backend supports password login followed by SMS OTP verification. Configure Twilio Verify with environment variables before starting the backend:
+Currently, two official plugins are available:
 
-```bash
-export TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-export TWILIO_AUTH_TOKEN=your_auth_token
-export TWILIO_VERIFY_SERVICE_SID=VAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-The values come from the Twilio Console:
+## React Compiler
 
-- `TWILIO_ACCOUNT_SID`: Account SID
-- `TWILIO_AUTH_TOKEN`: Auth Token
-- `TWILIO_VERIFY_SERVICE_SID`: the Verify Service SID, created under Verify > Services
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-Phone numbers must use E.164 format, such as `+919876543210`. Twilio trial accounts can send only to verified recipient numbers. Never commit the Auth Token or place it in frontend code.
+## Expanding the Oxlint configuration
 
-When the three Twilio values are absent, the backend uses a local in-memory OTP valid for five minutes and returns the code in the response for development. Set `OTP_EXPOSE_CODE=false` when testing without the development code response.
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.

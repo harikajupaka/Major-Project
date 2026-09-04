@@ -39,7 +39,7 @@ const Subcategories = () => {
     setLoading(true);
     try {
       // Create initial appointment doc as per flow requirements
-      const response = await fetch(`/api/appointments/category?customerId=${user.mobileNumber}&mainCategory=${mainCategory}&subCategory=${subCategory}`, {
+      const response = await fetch(`/api/appointments/category?customerId=${encodeURIComponent(user.mobileNumber)}&mainCategory=${encodeURIComponent(mainCategory)}&subCategory=${encodeURIComponent(subCategory)}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -47,8 +47,8 @@ const Subcategories = () => {
       });
       
       if (response.ok) {
-        // Passing dummy-123 for now since backend currently returns a string msg instead of JSON id
-        navigate(`/stylists?category=${mainCategory}&subCategory=${subCategory}&appointmentId=dummy-123`);
+        const data = await response.json();
+        navigate(`/stylists?category=${encodeURIComponent(mainCategory)}&subCategory=${encodeURIComponent(subCategory)}&appointmentId=${data.appointmentId}`);
       } else {
         alert("Failed to initialize appointment");
       }

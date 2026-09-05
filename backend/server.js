@@ -18,6 +18,18 @@ const staticDirectory = path.join(__dirname, 'src', 'main', 'resources', 'static
 app.use(express.json());
 app.use(express.static(staticDirectory));
 
+app.use((req, res, next) => {
+  const origin = req.get('Origin');
+  if (origin === 'https://major-project-frontend-qenj.onrender.com' || origin === 'http://localhost:5173') {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  return next();
+});
+
 const apiResponse = (success, message, extra = {}) => ({ success, message, ...extra });
 
 function normalizeMobileNumber(value) {

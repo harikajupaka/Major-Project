@@ -1,3 +1,4 @@
+import { apiUrl } from '../api/apiUrl';
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PlaceholderImage from '../components/PlaceholderImage';
@@ -37,7 +38,7 @@ const Cart = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/appointments/${appointmentId}/confirm?dateAndTime=${date} ${time}`, {
+      const response = await fetch(apiUrl(`/api/appointments/${appointmentId}/confirm?dateAndTime=${date} ${time}`), {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`

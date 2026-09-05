@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { apiUrl } from '../api/apiUrl';
 
 function Login() {
   const [mobileNumber, setMobileNumber] = useState('');
@@ -14,7 +15,7 @@ function Login() {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(apiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mobileNumber, password })
@@ -22,7 +23,7 @@ function Login() {
 
       const data = await response.json();
       if (data.success) {
-        const otpResponse = await fetch('/api/auth/otp/send', {
+        const otpResponse = await fetch(apiUrl('/api/auth/otp/send'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ mobileNumber })

@@ -1,3 +1,4 @@
+import { apiUrl } from '../api/apiUrl';
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PlaceholderImage from '../components/PlaceholderImage';
@@ -45,7 +46,7 @@ const Stylists = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/appointments/${appointmentId}/stylist?stylistId=${stylistId}`, {
+      const response = await fetch(apiUrl(`/api/appointments/${appointmentId}/stylist?stylistId=${stylistId}`), {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`

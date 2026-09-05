@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { apiUrl } from '../api/apiUrl';
 
 const VerifyOtp = () => {
   const [otp, setOtp] = useState('');
@@ -20,7 +21,7 @@ const VerifyOtp = () => {
     setError('');
     setNotice('');
     try {
-      const response = await fetch('/api/auth/otp/send', {
+      const response = await fetch(apiUrl('/api/auth/otp/send'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mobileNumber: pendingLogin.mobileNumber })
@@ -48,7 +49,7 @@ const VerifyOtp = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('/api/auth/otp/verify', {
+      const response = await fetch(apiUrl('/api/auth/otp/verify'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mobileNumber: pendingLogin.mobileNumber, otp })

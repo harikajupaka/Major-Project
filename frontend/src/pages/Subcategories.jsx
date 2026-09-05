@@ -1,3 +1,4 @@
+import { apiUrl } from '../api/apiUrl';
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PlaceholderImage from '../components/PlaceholderImage';
@@ -39,7 +40,7 @@ const Subcategories = () => {
     setLoading(true);
     try {
       // Create initial appointment doc as per flow requirements
-      const response = await fetch(`/api/appointments/category?customerId=${user.mobileNumber}&mainCategory=${mainCategory}&subCategory=${subCategory}`, {
+      const response = await fetch(apiUrl(`/api/appointments/category?customerId=${user.mobileNumber}&mainCategory=${mainCategory}&subCategory=${subCategory}`), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

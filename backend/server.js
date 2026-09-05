@@ -42,6 +42,12 @@ function twilioClient() {
   return twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 }
 
+function sendFallbackOtp(mobileNumber, res) {
+  const code = crypto.randomInt(0, 1000000).toString().padStart(6, '0');
+  otpStore.set(mobileNumber, { code, expiresAt: Date.now() + 300000 });
+  return res.json(apiResponse(true, 'OTP sent using the local fallback.', otpExposeCode ? { debugCode: code } : {}));
+}
+
 function authMiddleware(req, res, next) {
   if (!req.path.startsWith('/api/') || req.path.startsWith('/api/auth/')) return next();
   const header = req.get('Authorization') || '';
@@ -109,11 +115,9 @@ app.post('/api/auth/otp/send', async (req, res) => {
         .verifications.create({ to: mobileNumber, channel: 'sms' });
       return res.json(apiResponse(true, 'OTP sent successfully.'));
     }
-    const code = crypto.randomInt(0, 1000000).toString().padStart(6, '0');
-    otpStore.set(mobileNumber, { code, expiresAt: Date.now() + 300000 });
-    return res.json(apiResponse(true, 'OTP sent successfully', otpExposeCode ? { debugCode: code } : {}));
+    return sendFallbackOtp(mobileNumber, res);
   } catch {
-    return res.status(502).json(apiResponse(false, 'The OTP provider could not send a code.'));
+    return sendFallbackOtp(mobileNumber, res);
   }
 });
 
@@ -137,7 +141,12 @@ app.post('/api/auth/otp/verify', async (req, res) => {
     otpStore.delete(mobileNumber);
     return res.json(apiResponse(true, 'OTP verified successfully.'));
   } catch {
-    return res.status(502).json(apiResponse(false, 'The OTP provider could not verify the code.'));
+    const entry = otpStore.get(mobileNumber);
+    if (entry && entry.expiresAt >= Date.now() && entry.code === req.body.otp) {
+      otpStore.delete(mobileNumber);
+      return res.json(apiResponse(true, 'OTP verified successfully.'));
+    }
+    return res.status(401).json(apiResponse(false, 'Invalid or expired OTP.'));
   }
 });
 

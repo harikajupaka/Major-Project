@@ -7,7 +7,7 @@
              },
     "servers":  [
                     {
-                        "url":  "https://major-project-backend-ufr8.onrender.com",
+                        "url":  "https://major-project-backend-dw02.onrender.com",
                         "description":  "Generated server url"
                     }
                 ],
